@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Therapy Unit - AP Psychology</title>
+<style>
+:root {
+  --acid-green: #C7C51B;
+  --deep-moss-green: #31553B;
+  --chinese-black: #12140F;
+  --jonquil: #E9D71B;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  background-color: var(--chinese-black);
+  color: var(--white);
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+/*SODA EFFECT*/
+.soda-bubble {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  animation: float-shake 4s ease-in-out infinite;
+  opacity: 0.7;
+  z-index: 0;
+}
+@keyframes float-shake {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  25% {
+    transform: translate(2px, -2px) scale(1.1);
+    background-color: rgba(200, 255, 200, 0.4);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-2px, 2px) scale(0.9);
+    background-color: rgba(255, 255, 200, 0.3);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(1px, 1px) scale(1.05);
+    background-color: rgba(255, 200, 255, 0.35);
+    opacity: 0.7;
+  }
+}
+
+/* Parallax Header */
+.hero {
+  background-image: url('BreakingBad1.png');
+  background-attachment: fixed;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: 1400px 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--acid-green);
+  text-shadow: 2px 2px 5px black;
+  position: relative;
+  z-index: 10; /* above bubbles */
+}
+
+.hero h1 {
+  font-size: 3em;
+  margin: 0;
+  padding: 0 1em;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+/* Main content container for bubbles */
+.content-area {
+  position: relative;
+  max-width: 900px;
+  margin: 2em auto 4em auto;
+  padding: 1em;
+  z-index: 5; /* above bubbles */
+  background-color: rgba(18, 20, 15, 0.85); /* slight background so bubbles show behind */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.section {
+  margin: 2em auto;
+  max-width: 750px;
+  padding: 2em 2.5em;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Container for bubbles, full size of content-area */
+#bubble-container {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bubble {
+  background-color: var(--deep-moss-green);
+  border-left: 6px solid var(--acid-green);
+  border-radius: 12px;
+  padding: 1em 1.5em;
+  margin: 1em 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.bubble:hover {
+  background-color: #3f694f;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+label {
+  font-size: 1.2em;
+  font-weight: bold;
+  display: block;
+  color: var(--jonquil);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Smooth transitions for content blocks */
+.content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1em;
+  background-color: #1f1f1f;
+  border-left: 4px solid var(--acid-green);
+  border-radius: 8px;
+  margin-top: 0.5em;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+}
+
+.toggle:checked + label + .content {
+  max-height: 1500px; /* large enough to show content */
+  opacity: 1;
+  padding: 0.5em 1em;
+}
+
+/* Subsections */
+.sub-section {
+  margin-left: 1em;
+  border-left: 2px dashed var(--acid-green);
+  padding-left: 1em;
+  margin-top: 0.5em;
+}
+
+h2, h3 {
+  color: var(--acid-green);
+  text-align: center;
+}
+
+ul {
+  margin-left: 1.5em;
+}
+
+.footer {
+  background-color: #1a1d14;
+  color: var(--white);
+  padding: 1.2em 0 0em 0; /* Reduced vertical padding */
+  font-size: 0.9em;         /* Slightly smaller font */
+  position: relative;
+  z-index: 10;
+  border-top: 4px solid var(--acid-green);
+}
+
+.footer {
+  background-color: #1a1d14;
+  color: var(--white);
+  padding: 1.2em 0 0.8em 0;
+  font-size: 0.9em;
+  border-top: 4px solid var(--acid-green);
+  position: relative;
+  z-index: 10;
+  border-bottom: none; /* Ensure no black line below */
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-logo {
+  margin-bottom: 1.2em;
+}
+
+.footer-logo h3 {
+  margin: 0;
+  color: var(--acid-green);
+}
+
+.footer-logo p {
+  margin: 0.3em 0 0 0;
+  color: #bbb;
+  font-size: 0.9em;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2em;
+  margin-top: 1em;
+}
+
+.link-column {
+  min-width: 140px;
+  margin-bottom: 0.8em;
+}
+
+.link-column h4 {
+  margin-bottom: 0.4em;
+  color: var(--jonquil);
+  font-size: 1em;
+}
+
+.link-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.link-column li {
+  margin-bottom: 0.4em;
+}
+
+.link-column a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-column a:hover {
+  color: var(--acid-green);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 0.8em;
+  color: #888;
+}
+
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2em;
+    padding: 0.5em 1em;
+  }
+
+  .content-area {
+    padding: 1em;
+    margin: 1.5em 1em 3em 1em;
+  }
+
+  .section {
+    padding: 1.5em;
+    margin: 1.5em 0.8em;
+  }
+
+  .footer-container {
+    padding: 0 1em;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2em;
+  }
+
+  .link-column {
+    min-width: unset;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer-logo h3 {
+    font-size: 1.5em;
+  }
+
+  .footer-logo p {
+    font-size: 0.85em;
+  }
+
+  .bubble {
+    padding: 0.8em 1em;
+    font-size: 0.95em;
+  }
+
+  label {
+    font-size: 1em;
+  }
+
+  .content {
+    padding: 0 0.8em;
+  }
+}
+
+</style>
+</head>
+<body>
+
+
+<div class="hero">
+<h1>AP Psychology – Therapy Unit</h1>
+</div>
+
+<div class="section">
+<div id="bubble-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></div>
+<h2>Explore the Science of Healing</h2>
+<!-- Introduction to Therapy -->
+<div class="bubble">
+<input type="checkbox" id="intro" class="toggle" />
+<label for="intro">Introduction to Therapy</label>
+<div class="content">
+<p>
+Therapy all about cooking up a better mindset. it’s all about breaking down complex thoughts and feelings into manageable pieces, then carefully mixing in new perspectives to change the recipe of how someone sees the world. </p>
+<img src="https://thebaretalk.com/wp-content/uploads/2019/04/1E6AC106-CCEB-4B96-AAC6-6C049C5B11C3.png" alt="cute Freud" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>A therapist helps you find the right formula to turn emotional disturbances into clarity, guiding you through the reaction of self-concept and growth without letting things blow up.
+</br>
+In the world of psychology, there are different 'labs' of therapy, each with its own special method for transforming mental states. Some focus on the deep, hidden ingredients from past experiences, while others tweak the current thought processes to create a cleaner, stronger mindset. Whatever the approach, therapy’s ultimate goal is to help your life that’s healthier, more balanced, and way less volatile.
+</p>
+<p>
+In AP Psychology, you study psychotherapies, biological treatments, and methods used by therapists. The unit also covers the historical development of therapeutic approaches, the effectiveness of therapy and ethical considerations in therapeutic practice.
+</p>
+</div>
+</div>
+
+<!-- Psychological Therapies -->
+<div class="bubble">
+<input type="checkbox" id="psych-therapy" class="toggle" />
+<label for="psych-therapy">1. Psychological Therapies</label>
+<div class="content">
+
+<!-- Psychoanalysis -->
+<div class="bubble sub-section">
+<input type="checkbox" id="psychoanalysis" class="toggle" />
+<label for="psychoanalysis">A. Psychoanalysis</label>
+<div class="content">
+<img src="https://static.vecteezy.com/system/resources/previews/024/044/720/non_2x/sigmund-freud-the-father-of-psychoanalysis-portrait-illustration-engraving-free-vector.jpg" alt="cute Freud" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Psychoanalysis is a way of understanding ourselves that was started by Sigmund Freud. He believed that our thoughts, feelings, and actions are often shaped by things deep inside our minds that we’re not fully aware of, especially from childhood. By talking openly and thinking deeply about our past and emotions, we can discover hidden reasons for how we feel or act. This can help people deal with emotional pain, change unhelpful habits, and understand themselves better.</p>
+
+<!-- Techniques -->
+<div class="bubble sub-section">
+<input type="checkbox" id="psycho-techniques" class="toggle" />
+<label for="psycho-techniques">Techniques</label>
+<div class="content">
+<ul>
+<li><strong>Free Association:</strong> The person in therapy talks freely about whatever comes to mind including thoughts, memories, feelings, without trying to filter or organize them. This helps bring hidden thoughts and emotions to the surface.</li>
+<li><strong>Dream Analysis:</strong> Dreams are explored to find both the obvious content (what happens in the dream) and the hidden meaning underneath. Freud believed dreams give clues to unconscious thoughts and desires.</li>
+<li><strong>Transference:</strong> The person in therapy may start to direct feelings they have toward important people in their life (like parents or partners) onto the therapist. This helps uncover unresolved emotions and relationship patterns</li>
+<li><strong>Resistance:</strong> Sometimes, people avoid or struggle to talk about certain topics. This “resistance” can show where painful or deeply buried emotions are, giving clues to what needs to be explored.</li>
+</ul>
+</div>
+</div>
+
+<!-- Criticisms -->
+<div class="bubble sub-section">
+<input type="checkbox" id="psycho-criticism" class="toggle" />
+<label for="psycho-criticism">Criticisms</label>
+<div class="content">
+<p>Time-consuming, expensive, and lacks empirical evidence. Criticized for focusing heavily on childhood and sexuality.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Humanistic Therapies -->
+<div class="bubble sub-section">
+<input type="checkbox" id="humanistic" class="toggle" />
+<label for="humanistic">B. Humanistic Therapies</label>
+<div class="content">
+
+<!-- Carl Rogers -->
+<div class="bubble sub-section">
+<input type="checkbox" id="rogers" class="toggle" />
+<label for="rogers">1. Carl Rogers - Client-Centered Therapy</label>
+<div class="content">
+<img src="https://counsellingtutor.com/wp-content/uploads/2013/01/Carl-Ransom-Rogers-e1554716340144.jpg" alt="Rogers" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Belief that people can self-heal if provided the right conditions.</p>
+<ul>
+<li><strong>Unconditional Positive Regard:</strong> Therapist offers acceptance and non-judgment.</li>
+<li><strong>Empathy:</strong> Deep understanding of client emotions.</li>
+<li><strong>Genuineness:</strong> Therapist is authentic and transparent.</li>
+</ul>
+<p>Focus on self-actualization, effective for mild emotional issues and personal growth.</p>
+</div>
+</div>
+
+<!-- Abraham Maslow -->
+<div class="bubble sub-section">
+<input type="checkbox" id="maslow" class="toggle" />
+<label for="maslow">2. Abraham Maslow</label>
+<div class="content">
+<img src="https://miro.medium.com/v2/resize:fit:1400/1*JouMEI-kv-cQkjr_Iir2RA.jpeg" alt="Maslow" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Known for the hierarchy of needs, which says people must meet basic needs (like food and safety) before focusing on higher goals like self-esteem and self-actualization (becoming the best version of oneself). His ideas influenced the humanistic belief in personal growth and potential.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Behavioral Therapies -->
+<div class="bubble sub-section">
+<input type="checkbox" id="behavioral" class="toggle" />
+<label for="behavioral">C. Behavioral Therapies</label>
+<div class="content">
+
+<!-- Classical Conditioning -->
+<div class="bubble sub-section">
+<input type="checkbox" id="classical-conditioning" class="toggle" />
+<label for="classical-conditioning">1. Classical Conditioning Techniques</label>
+<div class="content">
+<img src="https://www.wezooit.eu/images/2020/11/17/condicionamiento-operante-wezooit1.jpg" alt="cute dog" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<ul>
+<li><strong>Systematic Desensitization:</strong> Gradual exposure to feared stimulus while teaching relaxation. Also includes Virtual Reality </li>
+<li><strong>Counterconditioning:</strong> Replacing an unwanted response with a positive one by pairing the trigger with something pleasant. (e.g. pairing nausea drugs with alcohol to prevent the use of it).</li>
+<li><strong>Aversive Conditioning:</strong> Reducing unwanted behavior by pairing it with something unpleasant or uncomfortable.</li>
+<li><strong>Flooding:</strong> Exposing someone to their fear all at once until the anxiety fades.</li>
+<li><strong>VR Exposure Therapy:</strong> Simulating environments to safely expose clients to a feared stimuli, helping reduce anxiety.
+</li>
+</ul>
+</div>
+</div>
+
+<!-- Operant Conditioning -->
+<div class="bubble sub-section">
+<input type="checkbox" id="operant-conditioning" class="toggle" />
+<label for="operant-conditioning">2. Operant Conditioning Techniques</label>
+<div class="content">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2rNdrDMpIwkA19lwQ_7MF0YAZJiIyxVlJ3g&s" alt="cute rat" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+
+<ul>
+<li><strong>Token Economy:</strong> Rewards (tokens) exchanged for privileges to reinforce positive behavior.</li>
+<li><strong>Reinforcements and Punishments:</strong> Reinforce desired behaviors, punish undesired behaviors.</li>
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Cognitive Therapies -->
+<div class="bubble sub-section">
+<input type="checkbox" id="cognitive" class="toggle" />
+<label for="cognitive">D. Cognitive Therapies</label>
+<div class="content">
+
+<!-- Aaron Beck -->
+<div class="bubble sub-section">
+<input type="checkbox" id="cbt" class="toggle" />
+<label for="cbt">1. Aaron Beck - Cognitive Behavioral Therapy (CBT)</label>
+<div class="content">
+
+<p>CBT is a therapy that helps people identify and change negative thought patterns and behaviors to improve how they feel and cope with problems.</p>
+<img src="https://sweetinstitute.com/wp-content/uploads/2020/09/canstockphoto62593480-2.jpg" alt="CBT" style="float: right; width: 250px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Effective for depression, anxiety, OCD.</p>
+</div>
+</div>
+
+<!-- Albert Ellis -->
+<div class="bubble sub-section">
+<input type="checkbox" id="rebt" class="toggle" />
+<label for="rebt">2. Albert Ellis - Rational Emotive Behavior Therapy (REBT)</label>
+<div class="content">
+
+<p>A therapy that helps people identify irrational beliefs, challenge them, and replace them with more rational, helpful thoughts to reduce emotional distress.</p>
+<img src="https://www.researchgate.net/publication/303906124/figure/fig2/AS:669590677901331@1536654266826/A-schematic-of-the-ABCDE-framework-used-within-the-REBT-process.ppm" alt="REBT" style="float: right; width: 350px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<!--  Treatments -->
+<div class="bubble">
+<input type="checkbox" id="biological" class="toggle" />
+<label for="biological">2. Biological Treatments</label>
+<div class="content">
+
+<!-- Psychopharmacology -->
+<div class="bubble sub-section">
+<input type="checkbox" id="psychopharmacology" class="toggle" />
+<label for="psychopharmacology">A. Psychopharmacology (Medication)</label>
+<div class="content">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtCQR7EoHLHOVJPU5PFjR0VpXnHUqWIKNC-twX-xHtp5XKgfzAVYEux-Yv5OuLhaNGcEU&usqp=CAU
+" alt="Meds" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+
+<p>Medications are used to treat psychological disorders by altering brain chemistry.</p>
+
+<!-- Antidepressants -->
+<div class="bubble sub-section">
+<input type="checkbox" id="antidepressants" class="toggle" />
+<label for="antidepressants">Antidepressants</label>
+<div class="content">
+<ul>
+<li><strong>SSRIs:</strong> Increase serotonin by blocking reuptake (e.g., Prozac, Zoloft).</li>
+</ul>
+</div>
+</div>
+
+<!-- Antianxiety Medications -->
+<div class="bubble sub-section">
+<input type="checkbox" id="antianxiety" class="toggle" />
+<label for="antianxiety">Antianxiety Medications</label>
+<div class="content">
+<ul>
+<li><strong>Benzodiazepines:</strong> Fast-acting CNS depressants (e.g., Xanax), habit-forming.</li>
+</ul>
+</div>
+</div>
+
+<!-- Antipsychotic Medications -->
+<div class="bubble sub-section">
+<input type="checkbox" id="antipsychotics" class="toggle" />
+<label for="antipsychotics">Antipsychotic Medications</label>
+<div class="content">
+<ul>
+<li><strong>First-Gen (Typical):</strong> Block dopamine receptors (e.g., Thorazine), side effects include tardive dyskinesia.</li>
+<li><strong>Second-Gen (Atypical):</strong> Target dopamine & serotonin (e.g., Risperdal), fewer motor side effects.</li>
+</ul>
+</div>
+</div>
+
+<!-- Mood Stabilizers -->
+<div class="bubble sub-section">
+<input type="checkbox" id="mood-stabilizers" class="toggle" />
+<label for="mood-stabilizers">Mood Stabilizers</label>
+<div class="content">
+<ul>
+<li><strong>Lithium:</strong> Stabilizes bipolar mood swings, requires monitoring.</li>
+</ul>
+</div>
+</div>
+
+<!-- Stimulants for ADHD -->
+<div class="bubble sub-section">
+<input type="checkbox" id="stimulants" class="toggle" />
+<label for="stimulants">Stimulants (for ADHD)</label>
+<div class="content">
+<p>Methylphenidate and Amphetamines increase dopamine and norepinephrine to improve focus.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Electroconvulsive Therapy -->
+<div class="bubble sub-section">
+<input type="checkbox" id="ect" class="toggle" />
+<label for="ect">B. Electroconvulsive Therapy (ECT)</label>
+<div class="content">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRth8AiEDOJ_1kgskCHxNRObBI7PPzzi6FQOQ&s" alt="Meds" style="float: right; width: 350px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+
+<p>Electrical current induces brief seizures to treat severe, medication-resistant depression.</p>
+<p>Effective but may cause temporary memory loss.</p>
+</div>
+</div>
+
+<!-- Psychosurgery -->
+<div class="bubble sub-section">
+<input type="checkbox" id="psychosurgery" class="toggle" />
+<label for="psychosurgery">C. Psychosurgery</label>
+<div class="content">
+
+<!-- Lobotomy -->
+<div class="bubble sub-section">
+<input type="checkbox" id="lobotomy" class="toggle" />
+<label for="lobotomy">Lobotomy</label>
+<div class="content">
+<img src="https://t4.ftcdn.net/jpg/06/32/11/63/360_F_632116327_MnKOGMMmMsXsbAiFlFzqBIWzKvPEIZ2P.jpg" alt="lobotomy" style="float: right; width: 150px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Historical procedure severing frontal lobe connections. Caused cognitive/emotional impairments. No longer used.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Group and Family Therapy -->
+<div class="bubble">
+<input type="checkbox" id="group-family" class="toggle" />
+<label for="group-family">3. Group and Family Therapy</label>
+<div class="content">
+
+<!-- Group Therapy -->
+<div class="bubble sub-section">
+<input type="checkbox" id="group-therapy" class="toggle" />
+<label for="group-therapy">A. Group Therapy</label>
+<div class="content">
+<img src="https://adaa.org/sites/default/files/2022-08/iStock-1375896501%20purchased%20small%20support%20group_0.jpg" alt="Meds" style="float: right; width: 200px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Therapist works with multiple clients together.</p>
+<ul>
+<li>Clients benefit from shared experiences and social practice.</li>
+<li>Types:
+<ul>
+<li>Self-help groups (e.g., Alcoholics Anonymous)</li>
+<li>Therapist-led groups</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<!-- Family Therapy -->
+<div class="bubble sub-section">
+<input type="checkbox" id="family-therapy" class="toggle" />
+<label for="family-therapy">B. Family Therapy</label>
+<div class="content">
+<img src="https://theravadawellness.com/wp-content/uploads/couples-therapy-las-vegas-6.jpg" alt="Meds" style="float: right; width: 200px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+<p>Improves communication and resolves conflicts within families. Used for behavioral problems, addiction, divorce.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Effectiveness of Therapy -->
+<div class="bubble">
+<input type="checkbox" id="effectiveness" class="toggle" />
+<label for="effectiveness">4. Effectiveness of Therapy</label>
+<div class="content">
+<p>Therapy has been shown to be effective for many mental health issues, including depression, anxiety, and trauma. Studies show that most people who go to therapy improve over time. Different types of therapy work better for different problems (e.g., CBT for anxiety). The relationship between therapist and client plays a big role in success. Overall, therapy can lead to better emotional well-being, coping skills, and life satisfaction.</p>
+<p><strong>Eclectic Therapy:</strong> Therapists often combine approaches to fit individual needs.</p>
+</div>
+</div>
+
+<!-- Ethical and Cultural Considerations -->
+<div class="bubble">
+<input type="checkbox" id="ethics" class="toggle" />
+<label for="ethics">5. Ethical and Cultural Considerations in Therapy</label>
+<div class="content">
+<ul>
+<li><strong>Confidentiality:</strong> Client info is private with few exceptions.</li>
+<li><strong>Informed Consent:</strong> Clients must understand and agree to therapy nature.</li>
+<li><strong>Nonmaleficence:</strong> Protect clients from harm.</li>
+<li><strong>Honour ans Integrity:</strong> Be truthful about qualifications, treatment, and progress.</li>
+
+</ul>
+</div>
+</div>
+<!-- Old Methods of Therapy -->
+<div class="bubble">
+<input type="checkbox" id="old-methods" class="toggle" />
+<label for="old-methods">Old Methods of Therapy</label>
+<div class="content">
+<img src="https://ih1.redbubble.net/image.2289245086.4528/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg" alt="Nope" style="float: right; width: 200px; margin-left: 1rem; margin-bottom: 0.5rem; border-radius: 8px;" />
+
+<p>Historical practices now considered harmful or outdated:</p>
+<ul>
+<li><strong>Beating:</strong> Physical punishment to 'cure' mental illness.</li>
+<li><strong>Bloodletting:</strong> Draining blood to balance bodily humors.</li>
+<li><strong>Exorcism:</strong> Attempting to drive out evil spirits.</li>
+<li><strong>Isolation:</strong> Confining patients in asylums.</li>
+<li><strong>Lobotomy:</strong> Severing brain connections (already discussed).</li>
+<li><strong>Other Rituals:</strong> Various unscientific, often cruel treatments.</li>
+</ul>
+</div>
+</div>
+
+  <!-- Key Terms Expanded -->
+  <div class="bubble">
+    <input type="checkbox" id="keyterms" class="toggle" />
+    <label for="keyterms">Key Terms to Know</label>
+    <div class="content">
+      <ul>
+  <li><strong>Psychotherapy:</strong> Psychological treatment designed to help individuals overcome emotional, behavioral, or mental health challenges by interacting with a trained therapist.</li>
+  <li><strong>Biomedical Therapy:</strong> Treatment involving medical procedures or medications to address psychological disorders, often combined with psychotherapy.</li>
+  <li><strong>Eclectic Approach:</strong> A flexible therapeutic style combining techniques from multiple therapies tailored to the client's unique needs.</li>
+  <li><strong>Psychoanalysis:</strong> Freud’s method focusing on unconscious childhood influences to understand and resolve emotional issues.</li>
+  <li><strong>Resistance:</strong> In psychoanalysis, unconscious defense mechanisms preventing revealing sensitive thoughts or feelings.</li>
+  <li><strong>Transference:</strong> Redirection of feelings for one person onto the therapist, a key concept in psychoanalysis.</li>
+  <li><strong>Free Association:</strong> Speaking freely to reveal hidden thoughts and feelings.</li>
+  <li><strong>Dream Analysis:</strong> Examining dreams to uncover unconscious desires and thoughts.</li>
+  <li><strong>Humanistic Therapies:</strong> Focus on personal growth and self-healing through acceptance and empathy.</li>
+  <li><strong>Client-Centered Therapy:</strong> Carl Rogers’ approach emphasizing unconditional positive regard, empathy, and genuineness.</li>
+  <li><strong>Hierarchy of Needs:</strong> Maslow’s theory that basic needs must be met before self-actualization.</li>
+  <li><strong>Behavioral Therapies:</strong> Using conditioning techniques to change behavior.</li>
+  <li><strong>Systematic Desensitization:</strong> Gradually exposing clients to feared stimuli while teaching relaxation to reduce anxiety.</li>
+  <li><strong>Counterconditioning:</strong> Replacing unwanted responses with positive ones by pairing triggers with pleasant stimuli.</li>
+  <li><strong>Operant Conditioning:</strong> Using reinforcements and punishments to modify behavior.</li>
+  <li><strong>Token Economy:</strong> Behavioral modification system where clients earn tokens for desired behaviors exchangeable for rewards.</li>
+  <li><strong>Cognitive-Behavioral Therapy (CBT):</strong> Therapy combining cognitive and behavioral techniques to change negative thought patterns and behaviors.</li>
+  <li><strong>Rational Emotive Behavior Therapy (REBT):</strong> Therapy challenging irrational beliefs to reduce emotional distress.</li>
+  <li><strong>Psychopharmacology:</strong> Study and use of medications to treat psychological disorders.</li>
+  <li><strong>Antidepressants (SSRIs):</strong> Medications that increase serotonin levels to treat depression.</li>
+  <li><strong>Antianxiety Medications:</strong> Drugs like benzodiazepines that reduce anxiety symptoms.</li>
+  <li><strong>Antipsychotic Medications:</strong> Medications blocking dopamine receptors to treat psychosis.</li>
+  <li><strong>Mood Stabilizers:</strong> Drugs such as lithium used to control mood swings, especially in bipolar disorder.</li>
+  <li><strong>Stimulants (for ADHD):</strong> Medications that increase dopamine and norepinephrine to improve focus.</li>
+  <li><strong>Electroconvulsive Therapy (ECT):</strong> Electrical stimulation causing seizures to treat severe depression.</li>
+  <li><strong>Psychosurgery:</strong> Surgical procedures targeting brain areas to alleviate psychological disorders (e.g., lobotomy).</li>
+  <li><strong>Group Therapy:</strong> Therapy involving multiple clients sharing experiences and support.</li>
+  <li><strong>Family Therapy:</strong> Therapy improving communication and resolving conflicts within families.</li>
+  <li><strong>Effectiveness of Therapy:</strong> Therapy improves mental health by enhancing emotional well-being and coping skills.</li>
+  <li><strong>Active Listening:</strong> Communication technique involving full attention, understanding, and feedback, often used in humanistic therapies.</li>
+  </ul>
+
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <h3>🧪⚗️ Therapy Unit</h3>
+      <p>Psych your mind, not your lab partner. Study smartly, don't let it bore you.</p>
+    </div>
+
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>About</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="https://apstudents.collegeboard.org/courses/ap-psychology">The AP Psych Course</a></li>
+          <li><a id="whoAmIButton" href="#">Who Am I?</a></li>
+          <li><a href="https://www.healthline.com/health/benefits-of-therapy">Why Therapy?</a></li>
+        </ul>
+      </div>
+
+      <div class="link-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.quia.com/quiz/5424674.html">Practice Quizzes</a></li>
+          <li><a href="https://www.barronseduc.com/blogs/ap/post/ap-psychology/unit-5-notes">Study Notes</a></li>
+          <li><a href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtOPRKzVLY0jJY-uHOH9KVU6">Crash Course - YT</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025; Ved Purohit | Breaking Bad Therapy Blog. All rights reserved. | Designed with focus and internal locus of control.</p>
+  </div>
+</footer>
+
+<script>
+  // Wait until DOM is fully loaded before creating bubbles
+  window.onload = () => {
+    const container = document.getElementById('bubble-container');
+    const containerHeight = container.clientHeight;
+    const containerWidth = container.clientWidth;
+
+    for (let i = 0; i < 80; i++) {
+      const bub = document.createElement('div');
+      bub.className = 'soda-bubble';
+      bub.style.left = Math.random() * 100 + '%';
+      // keep bubbles vertically within container
+      bub.style.top = Math.random() * (containerHeight - 20) + 'px';
+      bub.style.animationDuration = (3 + Math.random() * 3) + 's';
+      bub.style.animationDelay = (Math.random() * 4) + 's';
+      container.appendChild(bub);
+    }
+    const whoAmIButton = document.getElementById('whoAmIButton');
+
+    // Add an event listener to the link
+    whoAmIButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the link from navigating
+        // Show the popup message
+        alert('SAY - MY - Name \n\nVed Purohit \n\nYOU ARE GOD DAMN RIGHT');
+    });
+
+  };
+</script>
+
+</body>
+</html>

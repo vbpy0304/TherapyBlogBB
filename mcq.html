@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BB Therapy Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-bright: #C7C51B; /* Neon Green */
+      --green-dark: #31553B; /* Dark Green */
+      --charcoal: #12140F; /* Charcoal Grey */
+      --ash-white: #E9D71B; /* Light Creamy White */
+      --highlight-color: #FFEF00; /* Glow/Highlight color */
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #020400;
+      color: var(--ash-white);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--charcoal);
+      padding: 20px;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.8em;
+      font-family: 'Poppins', sans-serif;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      letter-spacing: 5px;
+    }
+
+    .quiz-wrapper {
+      overflow: hidden;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .quiz-container {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .question-card {
+      flex: 0 0 90%;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--charcoal);
+      margin: 0 10px;
+      padding: 40px;
+      border-radius: 10px;
+    }
+
+    .question-card h2 {
+      margin-top: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .options {
+      list-style: none;
+      padding: 0;
+      position: relative;
+    }
+
+    .options li {
+      background-color: var(--green-dark);
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: 1px solid var(--green-bright);
+      transition: all 0.3s ease;
+    }
+
+    .options li.selected {
+      box-shadow: 0 0 10px var(--highlight-color);
+    }
+
+    .navigation {
+      text-align: center;
+      margin: 20px 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navigation button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 2em;
+      color: var(--green-bright);
+    }
+
+    .answers-button {
+      display: block;
+      margin: 30px auto;
+      background-color: #e61980;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      color: #fff;
+    }
+
+    footer {
+  background-color: #1a1d14;
+  color: var(--white);
+  padding: 1.2em 0 0.8em 0;
+  font-size: 0.9em;
+  border-top: 4px solid var(--acid-green);
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+
+footer a {
+  color: var(--white);
+}
+
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 0;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.85);
+    }
+
+    .modal-content {
+      background-color: var(--charcoal);
+      color: var(--green-bright);
+      margin: 5% auto;
+      padding: 30px;
+      width: 80%;
+      max-height: 80vh; /* Set max height to avoid overflow */
+      border-radius: 10px;
+      position: relative;
+      overflow-y: auto; /* Allow scrolling if content is too long */
+     }
+    #answerList {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Two columns layout */
+      gap: 10px; /* Space between the columns */
+      margin: 0;
+      padding: 20px;
+    } 
+
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 28px;
+      color: var(--green-bright);
+      cursor: pointer;
+    }
+
+/* Soda Bubble Effect */
+.soda-bubble {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  animation: float-shake 4s ease-in-out infinite;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+@keyframes float-shake {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  25% {
+    transform: translate(2px, -2px) scale(1.1);
+    background-color: rgba(200, 255, 200, 0.4);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-2px, 2px) scale(0.9);
+    background-color: rgba(255, 255, 200, 0.3);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(1px, 1px) scale(1.05);
+    background-color: rgba(255, 200, 255, 0.35);
+    opacity: 0.7;
+  }
+}
+  </style>
+</head>
+<body>
+<div id="bubble-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></div>
+
+<!-- Bubble Container -->
+<header>
+  <h1>I am the one who asks - Therapy Quiz</h1>
+</header>
+
+
+<div class="quiz-wrapper">
+  <div class="quiz-container" id="quizContainer">
+    <!-- Questions will be injected here -->
+  </div>
+</div>
+
+<div class="navigation">
+  <button onclick="prevQuestion()">←</button>
+  <button onclick="nextQuestion()">→</button>
+</div>
+
+<button class="answers-button" onclick="showAnswers()">Show Answers</button>
+
+<footer>
+  <a href="index.html">Home</a>
+  <p>Powered by neurons, nuance, and neuroplasticity</p>
+  <p>&copy; Ved Purohit 2025 | Breaking Bad Therapy Blog | MCQs</p>
+</footer>
+
+<div id="answersModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeAnswers()">&times;</span>
+    <h2>Correct Answers</h2>
+    <ol id="answerList">
+      <!-- Answers go here -->
+    </ol>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    question: "1. Walter’s therapist asks him to say whatever comes to his mind and explains to him how every dream has a hidden meaning. What type of theory is Walter’s therapist using?",
+    options: ["Psychoanalytic Therapy", "Humanistic Therapy", "Active listening", "Psychodynamic Therapy"],
+    correct: 0
+  },
+  {
+    question: "2. Three-year-old Lydia avoids eye contact, lacks facial expressions, and struggles to show empathy for others who are upset. Which of the following disorders is most consistent with these symptoms?",
+    options: ["Antisocial-personality disorder", "Major Depressive Disorder", "ADHD", "Autism Spectrum Disorder"],
+    correct: 3
+  },
+  {
+    question: "3. Jesse has an intense fear of snakes. At the sight of a snake, he experiences a powerful fight-flight-freeze response. He avoids all places where he thinks snakes might be. Jesse is most likely to be diagnosed with which of the following anxiety disorders?",
+    options: ["Panic Disorder", "Snakophobia", "Specific Phobia", "Generalized anxiety disorder"],
+    correct: 2
+  },
+  {
+    question: "4. Mike actively listens to his patients, shows acceptance and is open about new opinions his patients share with him. What type of therapist is Mike?",
+    options: ["Psychodynamic", "Humanistic", "Cognitive", "Behavioral"],
+    correct: 1
+  },
+  {
+    question: "5. Which of the following is an example of systematic desensitization?",
+    options: ["Walt awards his kids with pancake whenever they finish their homework on time", "Skylar goes to Ted’s birthday party even though she hates him", "Pete pairs nausea drugs with alcohol so that his friend Badger stops drinking it.", "Tuco is afraid of guns, so his therapist works in stages to get rid of his fear. She shows Tuco a picture of a gun on the first day and then brings a real gun closer to him over a period of few weeks until he is no longer afraid."],
+    correct: 3
+  },
+  {
+    question: "6. Which of the following is an example of token economy in operant conditioning?",
+    options: ["Punishing Pinkman every time he says the B word", "Scolding Pinkman whenever he breaks a lab safety rule", "Giving Pinkman a token each time he completes a task, which he can later exchange for extra TV time", "Forcing Pinkman to clean the lab as a consequence for being late"],
+    correct: 2
+  },
+  {
+    question: "7. Dr. Goodman moves his hand around his patients and heals them using an energy field. What type of technique is Dr. Goodman using?",
+    options: ["Therapeutic Touch", "Extra Sensory Perception", "He isn't a therapist, rather a criminal", "Humanistic Perspective"],
+    correct: 0
+  },
+  {
+    question: "8. Which of the following is the oldest method of treating mental disorders?",
+    options: ["Cognitive Behavioral Therapy", "Light Exposure Therapy", "Beating the devil out of you", "Negative Punishment Therapy"],
+    correct: 2
+  },
+  {
+    question: "9. When examining case studies of individuals diagnosed with dissociative disorders, which of the following is the best result the researchers could come up with?",
+    options: ["Excessive amount of dopamine is associated with dissociative disorders", "Dissociative disorders develop as a coping mechanism for individuals", "Personality traits are not related to dissociative disorders", "Individuals diagnosed with dissociative disorders are involved in drugs with a different name."],
+    correct: 1
+  },
+  {
+    question: "10. Saul feels like his soul is out of his body, he talks to people that are not present and believes that the government is after him for helping criminals. Saul acts weirdly and does not like people. Which of the following disorders best describes Saul?",
+    options: ["Antisocial Personality Disorder", "Major Depressive Disorder", "Schizophrenia", "Schizotypical"],
+    correct: 2
+  },
+  {
+    question: "11. Badger's therapist suggests that his behaviors are influenced by unconscious motives and his actions are motivated by his past. Which therapy is Badger's therapist most likely practicing?",
+    options: ["Cognitive Behavioral Therapy", "Psychoanalytic therapy", "Humanistic Theory", "Behavioral Therapy"],
+    correct: 1
+  },
+  {
+    question: "12. James has frequent, intense emotional swings, feels empty, and has difficulty controlling his impulses. He sometimes has episodes of self-harm. Which disorder is James most likely experiencing?",
+    options: ["Borderline Personality Disorder", "Bipolar Disorder", "Major Depressive Disorder", "Generalized Anxiety Disorder"],
+    correct: 0
+  },
+  {
+    question: "13. Lalo has a deep fear of leaving his home, fearing something terrible will happen if he does. He refuses to go anywhere, even when encouraged by others. Which anxiety disorder best matches Lalo’s symptoms?",
+    options: ["Agoraphobia", "Social Anxiety Disorder", "Generalized Anxiety Disorder", "Panic Disorder"],
+    correct: 0
+  },
+  {
+    question: "14. Jane begins showing involuntary movements such as smacking lips and rapid blinking after taking a certain medication. Which type of medication is most likely causing these side effects?",
+    options: ["SSRIs", "Antipsychotic drugs", "Tranquilizers", "Mood Stabilizers"],
+    correct: 1
+  },
+  {
+    question: "15. Which of the following medications doesn't help with mood elevation?",
+    options: ["Paxil", "Zoloft", "Cymbalta", "Xanax"],
+    correct: 3
+  },
+  {
+    question: "16. What is the full form of SSRI?",
+    options: ["Synthetic Substance Research Institution", "Selective Serotonin Reuptake Inhibitors", "Synthetic Substance Regulation Initiative", "Sterylpropanoramine [hydroxypropylamino-methyl butanoic acid]"],
+    correct: 1
+  },
+  {
+    question: "17. Hank begins to suspect everyone around him is hiding something. He believes there’s a secret plot to get him fired, even though there's no evidence. Which disorder might Hank be showing signs of?",
+    options: ["Borderline PD", "Narcissistic PD", "Paranoid PD", "Schizophrenia"],
+    correct: 2
+  },
+  {
+    question: "18. Marie has a habit of stealing shiny objects even though she doesn’t need them. She often keeps those objects for decades and refuses to throw them away even if they are useless. What is this behavior called?",
+    options: ["Obsessive Compulsive Disorder", "Impulse Control Disorder", "Hoarding", "ADHD"],
+    correct: 2
+  },
+  {
+    question: "19. Which of the following best illustrates classical conditioning in therapy?",
+    options: ["Saul convinces Walt to gain his trust", "Lydia’s ringtone makes Todd happy because he associates it with excitement", "Walter gives Jesse a dollar every time he finishes a task", "Marie apologizes to Skyler on a phone call to avoid confrontation"],
+    correct: 1
+  },
+  {
+    question: "TheEnd... \nWalter’s death marks the end of a journey filled with moral conflicts, pride, and self-justification. Which psychological concept best explains why he chose to manufacture meth despite knowing it was wrong?",
+    options: ["Self-actualization", "Cognitive-dissonance", "Denial", "Learned helplessness"],
+    correct: 1
+  }
+];
+
+const quizContainer = document.getElementById('quizContainer');
+const answersModal = document.getElementById('answersModal');
+const answerList = document.getElementById('answerList');
+
+let currentQuestionIndex = 0;
+let selectedAnswers = new Array(questions.length).fill(null);
+
+// Render the current question and options
+function renderQuestion() {
+  quizContainer.innerHTML = '';
+
+  const questionObj = questions[currentQuestionIndex];
+
+  const card = document.createElement('div');
+  card.className = 'question-card';
+
+  const questionTitle = document.createElement('h2');
+  questionTitle.textContent = questionObj.question;
+  card.appendChild(questionTitle);
+
+  const optionsList = document.createElement('ul');
+  optionsList.className = 'options';
+
+  questionObj.options.forEach((option, index) => {
+    const optionItem = document.createElement('li');
+    optionItem.textContent = option;
+
+    if (selectedAnswers[currentQuestionIndex] === index) {
+      optionItem.classList.add('selected');
+    }
+
+    optionItem.addEventListener('click', () => {
+      selectedAnswers[currentQuestionIndex] = index;
+      renderQuestion();
+    });
+
+    optionsList.appendChild(optionItem);
+  });
+
+  card.appendChild(optionsList);
+  quizContainer.appendChild(card);
+}
+
+function prevQuestion() {
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    renderQuestion();
+  }
+}
+
+function nextQuestion() {
+  if (currentQuestionIndex < questions.length - 1) {
+    currentQuestionIndex++;
+    renderQuestion();
+  }
+}
+function showAnswers() {
+  answerList.innerHTML = '';
+
+  questions.forEach((q, i) => {
+    const li = document.createElement('li');
+
+    // Convert index (0,1,2,3) to letter (A,B,C,D)
+    const optionLetter = (index) => String.fromCharCode(65 + index); // 65 is 'A'
+
+    const correctLetter = optionLetter(q.correct);
+    const selectedIndex = selectedAnswers[i];
+    const selectedLetter = selectedIndex !== null ? optionLetter(selectedIndex) : 'None';
+
+    li.textContent = `Correct - ${correctLetter}, Selected - ${selectedLetter}`;
+    answerList.appendChild(li);
+  });
+
+  answersModal.style.display = 'block';
+  answersModal.style.zIndex = '1000';
+}
+
+function closeAnswers() {
+  answersModal.style.display = 'none';
+  answersModal.style.zIndex = '0';
+}
+
+// Close modal if clicked outside content
+window.onclick = function(event) {
+  if (event.target === answersModal) {
+    closeAnswers();
+  }
+}
+
+// Initial render
+renderQuestion();
+
+
+// Soda Bubble Effect Script
+window.addEventListener('load', () => {
+  const container = document.getElementById('bubble-container');
+  const containerHeight = window.innerHeight;
+  const containerWidth = window.innerWidth;
+
+  for (let i = 0; i < 80; i++) {
+    const bub = document.createElement('div');
+    bub.className = 'soda-bubble';
+    bub.style.left = Math.random() * containerWidth + 'px';
+    bub.style.top = Math.random() * containerHeight + 'px';
+    bub.style.animationDuration = (3 + Math.random() * 3) + 's';
+    bub.style.animationDelay = (Math.random() * 4) + 's';
+    container.appendChild(bub);
+  }
+});
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Breaking Bad FRQs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green-bright: #C7C51B; /* Neon Green */
+      --green-dark: #31553B;   /* Dark Green */
+      --charcoal: #12140F;      /* Charcoal Grey */
+      --ash-white: #E9D71B;     /* Creamy White */
+      --highlight-color: #FFEF00; /* Accent Glow */
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #020400;
+      color: var(--ash-white);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    header {
+      background-color: var(--charcoal);
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.8em;
+      font-family: 'Poppins', sans-serif;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      letter-spacing: 5px;
+    }
+
+    .quiz-wrapper {
+      overflow: hidden;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 900px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .quiz-container {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .question-card {
+      flex: 0 0 90%;
+      background-color: var(--charcoal);
+      margin: 0 10px;
+      padding: 40px;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .question-card h2 {
+      margin-top: 0;
+      font-size: 1.8em;
+      color: var(--highlight-color);
+    }
+
+    .question-card p {
+      font-size: 1.1em;
+      line-height: 1.5;
+      margin-bottom: 1em;
+    }
+
+    .navigation {
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .navigation button {
+      background: transparent;
+      border: none;
+      font-size: 2em;
+      color: var(--green-bright);
+      cursor: pointer;
+      margin: 0 20px;
+      transition: color 0.3s ease;
+    }
+
+    .navigation button:hover {
+      color: var(--highlight-color);
+    }
+
+    .answers-button {
+      display: block;
+      margin: 30px auto;
+      background-color: #e61980;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 1.1em;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    .answers-button:hover {
+      background-color: #bf166e;
+    }
+
+    footer {
+      background-color: #1a1d14;
+      color: var(--ash-white);
+      padding: 1.2em 0 0.8em 0;
+      font-size: 0.9em;
+      border-top: 4px solid var(--green-bright);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    footer a {
+      color: var(--ash-white);
+      text-decoration: none;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.85);
+    }
+
+    .modal-content {
+      background-color: var(--charcoal);
+      color: var(--green-bright);
+      margin: 5% auto;
+      padding: 30px;
+      width: 80%;
+      max-height: 80vh;
+      border-radius: 10px;
+      position: relative;
+      overflow-y: auto;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #answerList {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 0;
+      padding: 20px 0 0 0;
+      list-style-position: inside;
+      font-size: 1.1em;
+      color: var(--ash-white);
+    }
+
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 28px;
+      color: var(--green-bright);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close:hover {
+      color: var(--highlight-color);
+    }
+
+    /* Bubble Effect */
+    .soda-bubble {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.3);
+      animation: float-shake 4s ease-in-out infinite;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    @keyframes float-shake {
+      0%, 100% {
+        transform: translate(0,0) scale(1);
+        opacity: 0.6;
+      }
+      25% {
+        transform: translate(2px,-2px) scale(1.1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translate(-2px,2px) scale(0.9);
+        opacity: 0.5;
+      }
+      75% {
+        transform: translate(1px,1px) scale(1.05);
+        opacity: 0.7;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bubble-container" style="position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></div>
+
+  <header>
+    <h1>I AM NOT IN DANGER, YOU ARE - Therapy FRQs</h1>
+  </header>
+
+  <div class="quiz-wrapper">
+    <div class="quiz-container" id="quizContainer">
+      <!-- FRQs injected here -->
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button onclick="prevQuestion()">←</button>
+    <button onclick="nextQuestion()">→</button>
+  </div>
+
+  <button class="answers-button" onclick="showAnswers()">Show Answers</button>
+
+  <footer>
+    <a href="index.html">Home</a>
+<p>Therapy costs too much. So I made a website instead.</p>
+    <p>&copy; 2025 Breaking Bad Therapy Blog | All Rights Reserved</p>
+  </footer>
+
+  <div id="answersModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAnswers()">&times;</span>
+      <h2>Answers</h2>
+      <ol id="answerList"></ol>
+    </div>
+  </div>
+
+  <script>
+  const quizContainer = document.getElementById("quizContainer");
+  const answerList = document.getElementById("answerList");
+
+  const frqs = [
+    {
+  prompt: "(7 Marks) In a recent psychology article, a group of nerds looked at a bunch of past studies to figure out how well different types of therapy work for folks with post-traumatic stress disorder, also known as PTSD. In one very productive sitting, they reviewed over 40 studies that tested treatments like Cognitive Behavioral Therapy, psychodynamic therapy, and EMDR. They included only studies that followed ethical guidelines, specifically informed consent and nonmalefficence. They focused on how much people’s symptoms got better after getting therapy.<br>To measure this, the nerds used a trauma checklist that gave each person a score using Greek letters. The further down the Greek alphabet in the sequence, the worse the symptoms. So someone with a 'Pi' and 'Omicron' scores were doing better than someone with an 'Phi' or 'Omega', respectively. They then started with 0 and matched all the Greek letter to a number, again in the same sequence as they occur in, to make things easier to track. On average, people who got therapy had a 31.42% drop in their symptom scores, which means they were feeling noticeably better. Some therapies helped faster, while others worked better over time.<br>In the end, the nerds found that therapy was depended on things like how often someone talked to their therapist and how strong their relationship was. But they also noted that these results might not apply to everyone, especially people dealing with other mental health problems.<br>Overall, the nerds found that no one therapy is the best for everyone. Different types can work well, as long as the right conditions are in place.",
+  question: "A. Identify the research method used in this study.<br> B. State the operational definition of symptom change.<br> C. Interpret a statistic or mean from the study’s results.<br> D. Identify one ethical guideline that was followed in the studies included.<br> E. Explain how the findings may or may not be generalizable to a larger population.<br> F. Discuss how the findings of this study supports or refutes the idea that CBT has the biggest impact on PTSD.",
+  answer: "A. Meta-Analysis. 1 mark for correctly identifying that the research method used is meta-analysis<br> B. Symptom improvement is operationally defined as a change in trauma checklist scores where higher scores equal worse symptoms. 1 mark if the student explains that the study measured PTSD severity with a checklist and tracked score changes. Must mention how symptoms were measured, not just say 'they measured PTSD.'<br> C. The mean score showed a 32% decrease in PTSD symptoms after therapy, which tells us that therapy assisted many people and made them feel better. 1 mark if the student accurately interprets the 32% decrease as showing that therapy helped most participants feel better.<br> D. One ethical guideline applied by the study is informed consent. 1 mark if the student mentions an ethical principle like informed consent or avoiding harm. Accept “keeping participants safe”, “getting permission” or any other guideline from the study if clearly tied to ethics.<br> E. Yes, the study’s findings can be generalized to some extent because it included many types of therapy and combined over 40 studies. OR - No, the findings may not generalize to everyone because some people have other mental illnesses or weren’t part of clinical studies. 1 mark if the student answers whether the study is generalizable or not and explains the reason behind the answer. NO PARTIAL CREDIT. <br> F. The findings support the idea of CBT being the best therapy technique for PTSD. OR - The findings refute the idea that one specific type of therapy (like CBT) is always better, because the study showed many types can work if certain factors are present. 1 mark if the student mentions if the study supports or refutes the idea and award another mark (total 2 marks) if the student adds evidence from the study."
+},
+    {
+      prompt: "(6 marks) After the loss of Jenny and increasing feelings of worthlessness, Pesse Junkman begins attending therapy. His therapist, Dr. Victor Black encourages Mr. Junkman to explore his emotions openly and assures him that he is accepted no matter what he shares. The sessions focus more on how Pesse feels in the moment rather than analyzing his past or giving him direct advice. Mr. Black makes sure Pesse feels safe, and supports him no matter what. Over time, Mr. Junkman becomes more reflective, starts to see himself as capable of change, and reports feeling more in control of his life.",
+      question: "1. Identify the type of therapy being used in this scenario and explain how you know.<br>2. Name one specific technique or approach the therapist is using and explain its purpose.<br>3. Dr. Black discusses Pesse Junkman's recovery and personal experiences with his other patients. What ethical guideline is Dr. Black violating, and why is this a concern?",
+      answer: "1. Dr. Black is using humanistic therapy, specifically client-centered therapy. This is clear because he encourages Pesse to explore his emotions freely, avoids giving direct advice, and shows unconditional support. Give 1 mark if the student correctly identifies the therapy as humanistic or client-centered. Award another mark if the student clearly explains how they know, such as by mentioning techniques like focusing on emotions, avoiding advice, or showing unconditional support.<br>2. Dr. Black is using unconditional positive regard, which means he accepts Pesse without judgment no matter what he shares. The purpose of this technique is to create a safe, supportive space where the client feels comfortable being honest and is more likely to grow emotionally and build self-esteem. Give 1 mark if the student correctly identifies a valid humanistic technique (unconditional positive regard, active listening, or reflection). Award another mark if the student explains the purpose of the technique, such as helping the client feel safe, accepted, and open to personal growth.<br>3. Dr. Black is violating the ethical guideline of confidentiality. By discussing Pesse’s experiences with other patients, Dr. Black is breaking trust, which can harm the therapeutic relationship and discourage Pesse from being open in future sessions. Give 1 mark if the correct ethical guideline is identified and award another marks if correctly explains why it is a concern (breaks trust, damages the therapeutic relationship, or discourages openness)."
+    }
+  ];
+
+  let currentIndex = 0;
+
+  function renderFRQs() {
+    quizContainer.innerHTML = "";
+    frqs.forEach((q, i) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      card.innerHTML = `
+        <h2>Scenario ${i + 1}</h2>
+        <p>${q.prompt}</p>
+        <p><strong>Q:</strong> ${q.question}</p>
+      `;
+      quizContainer.appendChild(card);
+    });
+    updateTransform();
+  }
+
+  function updateTransform() {
+    quizContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+
+  function nextQuestion() {
+    if (currentIndex < frqs.length - 1) {
+      currentIndex++;
+      updateTransform();
+    }
+  }
+
+  function prevQuestion() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateTransform();
+    }
+  }
+
+  function showAnswers() {
+    answerList.innerHTML = frqs.map(q => `<li>${q.answer}</li>`).join("");
+    document.getElementById("answersModal").style.display = "block";
+  }
+
+  function closeAnswers() {
+    document.getElementById("answersModal").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("answersModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  renderFRQs();
+
+  window.addEventListener('load', () => {
+    const container = document.getElementById('bubble-container');
+    const containerHeight = window.innerHeight;
+    const containerWidth = window.innerWidth;
+
+    for (let i = 0; i < 80; i++) {
+      const bub = document.createElement('div');
+      bub.className = 'soda-bubble';
+      bub.style.left = Math.random() * containerWidth + 'px';
+      bub.style.top = Math.random() * containerHeight + 'px';
+      bub.style.animationDuration = (3 + Math.random() * 3) + 's';
+      bub.style.animationDelay = (Math.random() * 4) + 's';
+      container.appendChild(bub);
+    }
+  });
+  </script>
+</body>
+</html>

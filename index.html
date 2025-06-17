@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Breaking Bad Therapy Blog</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --acid-green: #C7C51B;
+  --deep-moss-green: #31553B;
+  --chinese-black: #12140F;
+  --jonquil: #E9D71B;
+  --white: #ffffff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--chinese-black);
+  color: var(--white);
+  overflow-x: hidden;
+  position: relative;
+}
+
+.bubble-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  animation: float-shake 8s ease-in-out infinite;
+  box-shadow: 0 0 8px currentColor;
+}
+@keyframes float-shake {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  25%  { transform: translate(-10px, -10px) scale(1.1); opacity: 0.9; }
+  50%  { transform: translate(10px, 10px) scale(0.9); opacity: 0.7; }
+  75%  { transform: translate(-10px, 10px) scale(1.1); opacity: 0.8; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+}
+
+/* Header */
+header {
+  background-image: url('BB_Banner.png');
+  background-attachment: fixed;
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: 1400px 300px;
+  background-color: black;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+}
+header h1 {
+  font-size: 3rem;
+  padding: 10px 20px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  text-shadow: 0 0 1px var(--acid-green), 0 0 10px #AADF19;
+}
+.hero-mobile {
+  display: none;
+  text-align: center;
+  color: var(--acid-green);
+  font-size: 1.5rem;
+  padding: 1em;
+}
+
+/* Nav bar */
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 70px;
+  background-color: var(--deep-moss-green);
+  padding: 15px 0;
+  position: relative;
+  z-index: 10;
+  border-top: 4px solid var(--acid-green);
+  border-bottom: 4px solid var(--acid-green);
+}
+
+nav .nav-item {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+nav .nav-item:hover {
+  background-color: var(--acid-green);
+  color: var(--chinese-black);
+}
+
+/* === DROPDOWN STYLES (common) === */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: block; /* keep block for transition to work */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--deep-moss-green);
+  border-radius: 5px;
+  min-width: 200px;
+  z-index: 99;
+
+  opacity: 0;
+  transform: translateY(-15px);
+  pointer-events: none;
+  border: 2px solid transparent;
+  transition: 
+    opacity 0.3s ease, 
+    transform 0.3s ease, 
+    border-color 0.3s ease;
+}
+.dropdown:hover .dropdown-content,
+.dropdown input[type="checkbox"]:checked ~ .dropdown-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  border-color: var(--jonquil); /* yellow border */
+}
+
+.dropdown-content a {
+  color: var(--white);
+  padding: 10px 15px;
+  display: block;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--jonquil);
+  color: var(--chinese-black);
+}
+
+/* === DESKTOP: Hover functionality === */
+@media (min-width: 769px) {
+  .dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .dropdown label {
+    display: inline-block;
+    color: var(--white);
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: default; /* prevent confusion */
+  }
+
+  .dropdown input[type="checkbox"] {
+    display: none;
+  }
+}
+
+/* === MOBILE: Checkbox toggle === */
+@media (max-width: 768px) {
+  .dropdown label {
+    display: inline-block;
+    color: var(--white);
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .dropdown label:hover {
+    background-color: var(--acid-green);
+    color: var(--chinese-black);
+  }
+
+  .dropdown input[type="checkbox"] {
+    display: none;
+  }
+
+  .dropdown input[type="checkbox"]:checked ~ .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+
+/* Content section */
+section {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: rgba(49, 85, 59, 0.9);
+  border-radius: 10px;
+  position: relative;
+  z-index: 5; /* was 3 before */
+}
+section h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.contest-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+.contest-section img {
+  width: 160px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.contest-section .content {
+  flex: 1;
+}
+
+.circle-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+
+.circle-buttons a {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: var(--acid-green);
+  color: var(--chinese-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+.circle-buttons a:hover {
+  transform: scale(1.15);
+  background-color: var(--jonquil);
+}
+.footer {
+  background-color: #1a1d14;
+  color: var(--white);
+  padding: 1.2em 0 0.8em 0;
+  font-size: 0.9em;
+  border-top: 4px solid var(--acid-green);
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 1em;
+}
+
+.footer-logo {
+  margin-bottom: 1.2em;
+}
+
+.footer-logo h3 {
+  margin: 0;
+  color: var(--acid-green);
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-logo p {
+  margin: 0.3em 0 0 0;
+  color: #bbb;
+  font-size: 0.9em;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2em;
+  margin-top: 1em;
+}
+
+.link-column {
+  min-width: 140px;
+  margin-bottom: 0.8em;
+}
+
+.link-column h4 {
+  margin-bottom: 0.4em;
+  color: var(--jonquil);
+  font-size: 1em;
+  font-family: 'Poppins', sans-serif;
+}
+
+.link-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.link-column li {
+  margin-bottom: 0.4em;
+}
+
+.link-column a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-column a:hover {
+  color: var(--acid-green);
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 1em;
+  font-size: 0.8em;
+  color: #888;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2em;
+  }
+
+  .link-column {
+    min-width: unset;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer-logo h3 {
+    font-size: 1.5em;
+  }
+
+  .footer-logo p {
+    font-size: 0.85em;
+  }
+}
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  background-color: var(--chinese-black);
+  border: 4px solid var(--jonquil);
+  border-radius: 10px;
+  padding: 20px;
+  width: 50%;
+  max-width: 800px;
+  box-shadow: 0 0 20px var(--jonquil);
+  color: var(--white);
+}
+
+.modal-content a {
+  color: var(--acid-green);
+  text-decoration: underline;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5em;
+  color: var(--jonquil);
+  cursor: pointer;
+}
+
+/* Blur when modal is open */
+body.modal-open > *:not(#referenceModal) {
+  filter: blur(5px);
+  pointer-events: none;
+}
+  #referenceModal a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #referenceModal ol li {
+    margin-bottom: 10px;
+  }.article-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  perspective: 600px;
+}
+
+/* Main circle */
+.article-circle .main-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--acid-green);
+  color: var(--chinese-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+.article-circle {
+  width: 120px;
+  height: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 10px;
+}
+
+
+/* Sub-circles */
+.article-circle .sub-circle {
+  position: absolute;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--jonquil);
+  color: var(--chinese-black);
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) scale(0.6);
+  transition: all 0.4s ease-out;
+  z-index: 1;
+}
+
+/* Sub-circle positions */
+.sub-circle-top {
+  top: 28px;
+  transition-delay: 0.05s;
+
+}
+.sub-circle-bottom {
+  bottom: 28px;
+  transition-delay: 0.1s;
+}
+
+
+/* Split animation on hover */
+.article-circle:hover .main-circle {
+  opacity: 0;
+}
+.article-circle:hover .sub-circle {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Add physical split feel */
+.article-circle:hover .sub-circle-top {
+  transform: translate(-50%, -80px) scale(1);
+}
+.article-circle:hover .sub-circle-bottom {
+  transform: translate(-50%, 80px) scale(1);
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- Bubbles -->
+  <div class="bubble-container" id="bubble-container"></div>
+
+  <!-- Mobile fallback header -->
+  <div class="hero-mobile">Breaking Bad Habits with Therapy</div>
+
+  <!-- Desktop header -->
+  <header>
+  </header>
+<nav>
+  <a href="mcq.html" class="nav-item">Multiple Choice</a>
+  <a href="frq.html" class="nav-item">Free Response</a>
+  <div class="dropdown nav-item">
+  <input type="checkbox" id="dropdown-toggle" />
+  <label for="dropdown-toggle">Resources</label>
+  <div class="dropdown-content">
+    <a href="https://www.barronseduc.com/blogs/ap/post/ap-psychology/unit-5-notes">Unit Notes</a>
+    <a href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtOPRKzVLY0jJY-uHOH9KVU6">Crash Course - YT</a>
+    <a href="https://www.quia.com/quiz/5424674.html">Practice Quiz</a>
+    <a href="https://study.com/academy/lesson/the-psychodynamic-model-and-abnormal-functioning.html">In-depth Videos</a>
+  </div>
+</div>
+<a href="#" class="nav-item" id="referencesBtn">References</a>
+</nav>
+
+<div id="referenceModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <h2>References (APA Style)</h2>
+    <p>The following ingredients helped me cook up my recipe.</p>
+    <ol>
+      <li>
+        Barron’s Edu. (n.d.). <em>AP Psychology Unit 5 Notes: Mental and physical health</em>. 
+        <a href="https://www.barronseduc.com/blogs/ap/post/ap-psychology/unit-5-notes">https://www.barronseduc.com/blogs/ap/post/ap-psychology/unit-5-notes</a>
+      </li>
+      <li>
+        YouTube - Crash Course. (n.d.). <em>Psychology</em>. 
+        <a href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtOPRKzVLY0jJY-uHOH9KVU6">https://www.youtube.com/playlist?list=PL8dPuuaLjXtOPRKzVLY0jJY-uHOH9KVU6</a>
+      </li>
+      <li>
+        Quia. (n.d.). <em>AP Psychology Unit 13: Treatments / Therapy</em>. 
+        <a href="https://www.quia.com/quiz/5424674.html">https://www.quia.com/quiz/5424674.html</a>
+      </li>
+      <li>
+        Study.com. (n.d.). <em>The psychodynamic model and abnormal functioning - video</em>. 
+        <a href="https://study.com/academy/lesson/video/the-psychodynamic-model-and-abnormal-functioning.html">https://study.com/academy/lesson/video/the-psychodynamic-model-and-abnormal-functioning.html</a>
+      </li>
+      <li>
+        College Board. (n.d.). <em>AP Psychology – AP Students</em>. 
+        <a href="https://apstudents.collegeboard.org/courses/ap-psychology">https://apstudents.collegeboard.org/courses/ap-psychology</a>
+      </li>
+      <li>
+        Person. (2025, June 2). <em>Benefits of therapy for yourself, family, and relationships</em>. Healthline. 
+        <a href="https://www.healthline.com/health/benefits-of-therapy">https://www.healthline.com/health/benefits-of-therapy</a>
+      </li>
+      <li>
+        Opland, E., & Torrico, B. (2024). <em>Psychotherapy and therapeutic relationship. StatPearls. StatPearls</em>. Publishing. 
+        <a href="https://behavioralhealthnews.org/a-comprehensive-overview-of-psychotherapy/">https://behavioralhealthnews.org/a-comprehensive-overview-of-psychotherapy//</a>
+      </li>
+      <li>
+        National Institute of Mental Health. (2012). <em>A comprehensive overview of psychotherapy.</em>Behavioral Health News.. 
+        <a href="https://www.ncbi.nlm.nih.gov/books/NBK559031/">https://www.ncbi.nlm.nih.gov/books/NBK559031/</a>
+      </li>
+      <li>
+        Special thanks to Ms. Wood for her valuable feedback on my blog and for always being there when I needed guidance. I’m also grateful to my good friend Jakob Isaak for proofreading my work and helping me refine it. Additionally, I used ChatGPT to generate some meme images and assist with improving the clarity and structure of my blog. If you have any questions, concerns, or would like additional references or acknowledgements, feel free to contact me. This blog made me the strongest in what used to be my weakest subject—writing with confidence and clarity.
+      </li>
+    </ol>
+  </div>
+</div>
+    <section>
+      <h2>Breaking Bad Habits With Therapy</h2>
+      <div class="contest-section">
+        <img src="BreakingBad.png" alt="Characters">
+        <div class="content">
+          <h3>Why is Therapy Important</h3>
+          <p>Therapy is essential because it helps us cook up healthier ways to face life’s challenges and break bad patterns that hold us back. Therapy allows us to analyze our thoughts and emotions with precision, turning volatile feelings into stable solutions. It’s the perfect lab where transformation happens, helping us find balance before our mental world reaches its own tipping point. </br> Time to dive into the chemistry of mind!</p>
+        </div>
+      </div>
+
+      <div class="circle-buttons">
+        <a href="learn.html">Learn </br>Therapy</a>
+        <a href="memes.html">Meme </br>Therapy</a>
+	<div class="article-circle">
+  	  <div class="main-circle">Articles</div>
+            <a href="https://www.ncbi.nlm.nih.gov/books/NBK608012/" class="sub-circle sub-circle-top">Psychotherapy </br>& Therapeutic Relationships</a>
+  	    <a href="https://behavioralhealthnews.org/a-comprehensive-overview-of-psychotherapy/" class="sub-circle sub-circle-bottom">Types of Psychotherapy</a>
+	</div>
+      </div>
+    </section>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <h3>🧪 Therapy Unit - BB Style</h3>
+      <p>Heisenberg in Psych isn't a bug, it's a feature </p>
+    </div>
+
+    <div class="footer-links">
+      <div class="link-column">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="mcq.html">MCQ Practice</a></li>
+          <li><a href="frq.html">FRQs</a></li>
+          <li><a href="memes.html">Meme Therapy</a></li>
+        </ul>
+      </div>
+
+      <div class="link-column">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://www.barronseduc.com/blogs/ap/post/ap-psychology/unit-5-notes">Study Notes</a></li>
+          <li><a href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtOPRKzVLY0jJY-uHOH9KVU6">Crash Course - YT</a></li>
+          <li><a href="https://www.quia.com/quiz/5424674.html">Practice Quiz</a></li>
+	  <li><a href="https://study.com/academy/lesson/video/the-psychodynamic-model-and-abnormal-functioning.html">In-Depth Videos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 Ved Purohit | Breaking Bad Therapy Blog</p>
+    <p>Made wirh caffeine and cognitive curiosity.</p>
+  </div>
+</footer>
+<script>
+  const bubbleContainer = document.getElementById('bubble-container');
+
+  const neonColors = [
+    'rgba(57, 255, 20, 0.8)',
+    'rgba(255, 20, 147, 0.8)',
+    'rgba(0, 255, 255, 0.8)',
+    'rgba(255, 255, 0, 0.8)',
+    'rgba(0, 255, 127, 0.8)',
+    'rgba(138, 43, 226, 0.8)'
+  ];
+
+  for (let i = 0; i < 60; i++) {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.style.left = Math.random() * 100 + 'vw';
+    bubble.style.top = Math.random() * 100 + 'vh';
+    bubble.style.bottom = 'auto';
+    bubble.style.backgroundColor = neonColors[Math.floor(Math.random() * neonColors.length)];
+    bubble.style.animationDuration = (6 + Math.random() * 6) + 's';
+    bubble.style.animationDelay = (Math.random() * 6) + 's';
+    bubbleContainer.appendChild(bubble);
+  }
+
+  // Dropdown close on outside click
+  document.addEventListener('click', function(e) {
+    const dropdown = document.querySelector('.dropdown');
+    const checkbox = document.getElementById('dropdown-toggle');
+    if (!dropdown.contains(e.target)) {
+      checkbox.checked = false;
+    }
+  });
+
+  // Modal logic
+  const modal = document.getElementById("referenceModal");
+  const openBtn = document.getElementById("referencesBtn");
+  const closeBtn = document.getElementById("closeModal");
+
+  openBtn.onclick = () => {
+    modal.style.display = "block";
+    document.body.classList.add("modal-open");
+  };
+
+  closeBtn.onclick = () => {
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
+  };
+
+  window.onclick = (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+      document.body.classList.remove("modal-open");
+    }
+  };
+</script>
+
+
+</body>
+</html>
